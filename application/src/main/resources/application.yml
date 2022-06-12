@@ -41,8 +41,8 @@ logging:
     tomcat: org.apache.catalina
     service: de.bcxp.thesis.gitops
   level:
-    spring: DEBUG
-    tomcat: DEBUG
+    spring: INFO
+    tomcat: INFO
     service: TRACE
   charset:
     console: UTF-8 # The charset to use for console logging.
