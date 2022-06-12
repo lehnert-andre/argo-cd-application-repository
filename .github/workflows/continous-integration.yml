@@ -48,12 +48,18 @@ jobs:
         echo "Push image $DOCKER_USER/$DOCKER_REPO_NAME:${{ steps.tagInfo.outputs.date }}-${{ steps.tagInfo.outputs.shaShort }}"
         docker push $DOCKER_USER/$DOCKER_REPO_NAME:${{ steps.tagInfo.outputs.date }}-${{ steps.tagInfo.outputs.shaShort }}
 
-    - uses: actions/upload-artifact@master
+    - run: |
+        pwd
+        ls
+
+    - name: Provide dev.env
+      uses: actions/upload-artifact@master
       with:
         name: environment-file-dev
         path: environment-variables/dev/dev.env
 
-    - uses: actions/upload-artifact@master
+    - name: Provide prod.env
+      uses: actions/upload-artifact@master
       with:
         name: environment-file-prod
         path: environment-variables/prod/prod.env
@@ -71,12 +77,14 @@ jobs:
         kustomize edit set image alehnert/argo-cd-application-repository=alehnert/argo-cd-application-repository:${tag}
         cat kustomization.yaml
 
-    - uses: actions/download-artifact@master
+    - name: Override dev.env
+      uses: actions/download-artifact@master
       with:
         name: environment-file-dev
         path: argo-cd-gitops-repository/kustomize/app/env/dev
 
-    - uses: actions/download-artifact@master
+    - name: Override prod.env
+      uses: actions/download-artifact@master
       with:
         name: environment-file-prod
         path: argo-cd-gitops-repository/kustomize/app/env/prod
