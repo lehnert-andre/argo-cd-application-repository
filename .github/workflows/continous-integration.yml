@@ -19,4 +19,12 @@ jobs:
       with:
         repository: lehnert-andre/argo-cd-gitops-repository
         path: './argo-cd-gitops-repository'
+
+    - name: 'Kustomize Image Version Update'
+      uses: imranismail/setup-kustomize@v1
+      run: |
+        kustomize edit set image app:${GITHUB_SHA}
+        git add .
+        git commit -m "Set `app` image tag to `${GITHUB_SHA}`"
+        git push
   
