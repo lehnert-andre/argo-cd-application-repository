@@ -23,7 +23,11 @@ jobs:
     - uses: imranismail/setup-kustomize@v1
     - run: |
         cd argo-cd-gitops-repository/kustomize/app/env/dev
-        kustomize edit set image alehnert/argo-cd-application-repository:${GITHUB_SHA}
+        pwd
+        kustomize edit set image alehnert/argo-cd-application-repository=alehnert/argo-cd-application-repositor:${GITHUB_SHA}
+        cat kustomize.yaml
+        git config --global user.email "ci@example.com"
+        git config --global user.name "CI pipeline"
         git add .
         git commit -m "Set `alehnert/argo-cd-application-repository` image tag to `${GITHUB_SHA}`"
         git push
