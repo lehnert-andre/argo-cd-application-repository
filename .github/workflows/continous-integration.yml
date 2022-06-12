@@ -8,6 +8,7 @@ env:
   DOCKER_USER: ${{secrets.DOCKER_USER}}
   DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
   DOCKER_REPO_NAME: ${{secrets.DOCKER_REPO_NAME}}
+  ACCESS_TOKEN: ${{secrets.PERSONAL_ACCESS_TOKEN}}
   
 jobs:
   
@@ -30,5 +31,6 @@ jobs:
         git config --global user.name "CI pipeline"
         git add .
         git commit -m "Set `alehnert/argo-cd-application-repository` image tag to `${GITHUB_SHA}`"
-        git push
+        git push https://${ACCESS_TOKEN}@github.com/lehnert-andre/argo-cd-gitops-repository.git
+
   
