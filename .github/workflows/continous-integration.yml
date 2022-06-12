@@ -25,7 +25,7 @@ jobs:
         cd argo-cd-gitops-repository/kustomize/app/env/dev
         pwd
         kustomize edit set image alehnert/argo-cd-application-repository=alehnert/argo-cd-application-repositor:${GITHUB_SHA}
-        cat kustomize.yaml
+        cat kustomization.yaml
         git config --global user.email "ci@example.com"
         git config --global user.name "CI pipeline"
         git add .
