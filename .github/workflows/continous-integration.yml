@@ -65,30 +65,38 @@ jobs:
     runs-on: ubuntu-latest
     needs: push-image-to-docker-hub
 
-    steps:
-    - uses: imranismail/setup-kustomize@v1
-    - run: |
-        export tag=${{ needs.push-image-to-docker-hub.outputs.date }}-${{ needs.push-image-to-docker-hub.outputs.shaShort }}
-        git clone https://${ACCESS_TOKEN}@github.com/lehnert-andre/argo-cd-gitops-repository.git
-        cd argo-cd-gitops-repository/kustomize/app/env/dev
-        kustomize edit set image alehnert/argo-cd-application-repository=alehnert/argo-cd-application-repository:${tag}
-        cat kustomization.yaml
+    steps: 
 
-    - name: Override dev.env
+    - name: Get dev.env
       uses: actions/download-artifact@master
       with:
         name: environment-file-dev
-        path: argo-cd-gitops-repository/kustomize/app/env/dev
+        path: environment-variables
 
-    - name: Override prod.env
+    - name: Get prod.env
       uses: actions/download-artifact@master
       with:
         name: environment-file-prod
-        path: argo-cd-gitops-repository/kustomize/app/env/prod
+        path: environment-variables
     
+    - uses: imranismail/setup-kustomize@v1
     - run: |
         pwd
         ls
+        ls environment-variables
+        export tag=${{ needs.push-image-to-docker-hub.outputs.date }}-${{ needs.push-image-to-docker-hub.outputs.shaShort }}     
+        git clone https://${ACCESS_TOKEN}@github.com/lehnert-andre/argo-cd-gitops-repository.git
+        cp environment-variables/dev.env argo-cd-gitops-repository/kustomize/app/env/dev
+        cp environment-variables/prod.env argo-cd-gitops-repository/kustomize/app/env/prod
+
+        cd argo-cd-gitops-repository/kustomize/app
+        cd env/dev
+        kustomize edit set image alehnert/argo-cd-application-repository=alehnert/argo-cd-application-repository:${tag}
+        cat kustomization.yaml
+
+        cd ../../env/prod
+        kustomize edit set image alehnert/argo-cd-application-repository=alehnert/argo-cd-application-repository:${tag}
+
         git config --global user.email "ci@example.com"
         git config --global user.name "CI pipeline"
         git add .
