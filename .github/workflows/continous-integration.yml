@@ -25,29 +25,7 @@ jobs:
       run: |
         echo "::set-output name=date::$(date +'%Y-%m-%d')"
         echo "::set-output name=shaShort::$(git rev-parse --short HEAD)"
-      
-    - uses: actions/setup-java@v2
-      with:
-        distribution: 'temurin' # See 'Supported distributions' for available options https://github.com/actions/setup-java
-        java-version: '17'
-        cache: 'maven'
 
-    - name: Build the Docker image 
-      run: |
-        echo "Build Docker image $DOCKER_USER/$DOCKER_REPO_NAME:latest"
-        cd application
-        sh ./mvnw spring-boot:build-image -Dspring-boot.build-image.imageName=$DOCKER_USER/$DOCKER_REPO_NAME
-      
-    - name: Docker Login
-      run: | 
-        docker login -u $DOCKER_USER -p $DOCKER_PASSWORD  
-      
-    - name: Docker Image Tagging and Push
-      run: |
-        docker tag $DOCKER_USER/$DOCKER_REPO_NAME:latest $DOCKER_USER/$DOCKER_REPO_NAME:${{ steps.tagInfo.outputs.date }}-${{ steps.tagInfo.outputs.shaShort }}
-        echo "Push image $DOCKER_USER/$DOCKER_REPO_NAME:${{ steps.tagInfo.outputs.date }}-${{ steps.tagInfo.outputs.shaShort }}"
-        docker push $DOCKER_USER/$DOCKER_REPO_NAME:${{ steps.tagInfo.outputs.date }}-${{ steps.tagInfo.outputs.shaShort }}
-        cd ..
 
     - name: Provide dev.env
       uses: actions/upload-artifact@master
@@ -81,26 +59,24 @@ jobs:
     
     - uses: imranismail/setup-kustomize@v1
     - run: |
-        pwd
-        ls
-        ls environment-variables
+        export projectRoot=$(pwd)
         export tag=${{ needs.push-image-to-docker-hub.outputs.date }}-${{ needs.push-image-to-docker-hub.outputs.shaShort }}     
         git clone https://${ACCESS_TOKEN}@github.com/lehnert-andre/argo-cd-gitops-repository.git
-        cp environment-variables/dev.env argo-cd-gitops-repository/kustomize/app/env/dev
-        cp environment-variables/prod.env argo-cd-gitops-repository/kustomize/app/env/prod
-
-        cd argo-cd-gitops-repository/kustomize/app
-        cd env/dev
-        kustomize edit set image alehnert/argo-cd-application-repository=alehnert/argo-cd-application-repository:${tag}
-        cat kustomization.yaml
-
-        cd ../../env/prod
-        kustomize edit set image alehnert/argo-cd-application-repository=alehnert/argo-cd-application-repository:${tag}
-
         git config --global user.email "ci@example.com"
         git config --global user.name "CI pipeline"
+
+        echo Update DEV
+        cp ${projectRoot}/environment-variables/dev.env ${projectRoot}/argo-cd-gitops-repository/kustomize/app/env/dev/dev.env
+        
+        echo Update Docker Image tag
+        cd ${projectRoot}/argo-cd-gitops-repository/kustomize/app/env/dev
+        ls
+        kustomize edit set image alehnert/argo-cd-application-repository=alehnert/argo-cd-application-repository:${tag}
+        
+        echo Push DEV changes
         git add .
-        git commit -m "Set `alehnert/argo-cd-application-repository` image tag to `${tag}`"
+        git commit -m "Release `${tag}`"
         git push https://${ACCESS_TOKEN}@github.com/lehnert-andre/argo-cd-gitops-repository.git
+
 
   
