@@ -78,14 +78,20 @@ jobs:
         git push https://${ACCESS_TOKEN}@github.com/lehnert-andre/argo-cd-gitops-repository.git
 
         echo Update PROD
-        git checkout -b release/${tag}
         cp ${projectRoot}/environment-variables/prod.env ${projectRoot}/argo-cd-gitops-repository/kustomize/app/env/prod/prod.env
         
         echo Update Docker Image tag on PROD
         cd ${projectRoot}/argo-cd-gitops-repository/kustomize/app/env/prod
         kustomize edit set image alehnert/argo-cd-application-repository=alehnert/argo-cd-application-repository:${tag}
-        git add .
-        git commit -m "Release ${tag}"
-        git push https://${ACCESS_TOKEN}@github.com/lehnert-andre/argo-cd-gitops-repository.git release/${tag}
-
-  
+    
+    - name: Create Pull Request
+      uses: peter-evans/create-pull-request@v4
+      with:
+        token: ${ACCESS_TOKEN}
+        commit-message: Release ${tag}
+        committer: CI Pipeline
+        author: CI Pipeline
+        title: '[PROD] ${tag}'
+        body: |
+          # Release ${tag} for PROD
+        assignees: lehnert-andre
