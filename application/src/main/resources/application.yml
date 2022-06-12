@@ -5,7 +5,7 @@
 server:
   port: 8083
   servlet:
-    context-path: ${APP_PATH}/api
+    context-path: /${APP_PATH:api}
 
 management:
   server:
