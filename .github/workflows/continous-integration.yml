@@ -22,8 +22,9 @@ jobs:
 
     - uses: imranismail/setup-kustomize@v1
     - run: |
-        kustomize edit set image app:${GITHUB_SHA}
+        cd argo-cd-gitops-repository/kustomize/app/env/dev
+        kustomize edit set image alehnert/argo-cd-application-repository:${GITHUB_SHA}
         git add .
-        git commit -m "Set `app` image tag to `${GITHUB_SHA}`"
+        git commit -m "Set `alehnert/argo-cd-application-repository` image tag to `${GITHUB_SHA}`"
         git push
   
