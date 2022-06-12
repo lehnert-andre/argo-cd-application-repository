@@ -47,10 +47,7 @@ jobs:
         docker tag $DOCKER_USER/$DOCKER_REPO_NAME:latest $DOCKER_USER/$DOCKER_REPO_NAME:${{ steps.tagInfo.outputs.date }}-${{ steps.tagInfo.outputs.shaShort }}
         echo "Push image $DOCKER_USER/$DOCKER_REPO_NAME:${{ steps.tagInfo.outputs.date }}-${{ steps.tagInfo.outputs.shaShort }}"
         docker push $DOCKER_USER/$DOCKER_REPO_NAME:${{ steps.tagInfo.outputs.date }}-${{ steps.tagInfo.outputs.shaShort }}
-
-    - run: |
-        pwd
-        ls
+        cd ..
 
     - name: Provide dev.env
       uses: actions/upload-artifact@master
