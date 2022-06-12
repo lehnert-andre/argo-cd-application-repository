@@ -2,7 +2,7 @@ name: Continous Integration
 
 on:
   push:
-    branches: [ master, feature/** ]
+    branches: [ main, feature/** ]
 
 env:
   DOCKER_USER: ${{secrets.DOCKER_USER}}
