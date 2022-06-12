@@ -1,0 +1,21 @@
+= Evaluation and Case Study of the GitOps Principle
+
+== Application Repository - Initial situation
+
+
+Local Version API endpoint: +
+_http://localhost:8083/api/v1/version_
+
+.Example JSON response
+[source,json]
+----
+{
+  "name":"gitops-evaluation-spring-boot-example",
+  "environment":"PROD",
+  "version":"1.0.0"
+}
+----
+
+include::./documentation/quickstart.adoc[]
+include::./documentation/setup.adoc[]
+

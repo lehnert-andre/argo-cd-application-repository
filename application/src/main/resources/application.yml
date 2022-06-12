@@ -1,0 +1,67 @@
+### Global configuration
+#
+# Valid for all environments
+# Example: http://localhost:8083/api/specification/index.html
+server:
+  port: 8083
+  servlet:
+    context-path: '/api'
+
+management:
+  server:
+    port: 9090
+
+### Swagger/ OAS configuration
+#
+# Open: <HOST>/api/specification/index.html
+# More properties:https://springdoc.org/#properties
+springdoc:
+  packagesToScan: 'de.bcxp.thesis.gitops.components'
+  api-docs:
+    enabled: true
+    path: '/specification/swagger-api.yaml'
+  swagger-ui:
+    enabled: true
+    path: '/specification/index.html'
+    disable-swagger-default-url: true
+    persistAuthorization: true # persists authorization data and it would not be lost on browser close/refresh
+    operationsSorter: 'alpha'
+    tagsSorter: 'alpha'
+    defaultModelsExpandDepth: 0
+    defaultModelExpandDepth: 0
+
+### Swagger/ OAS configuration
+#
+#
+logging:
+  pattern:
+    console: "%d{yyyy-MM-dd'T'HH:mm:ss.SSS} %highlight(%-5level) %clr(%-40.40logger{39}){cyan} - %msg%n"
+  group:
+    spring: org.springframework
+    tomcat: org.apache.catalina
+    service: de.bcxp.thesis.gitops
+  level:
+    spring: WARN
+    tomcat: WARN
+    service: TRACE
+  charset:
+    console: UTF-8 # The charset to use for console logging.
+    file: UTF-8 # The charset to use for console logging.
+  file:
+    name: ./logs/gitops-evaluation-spring-boot-example.log
+  logback:
+    rollingpolicy:
+      #file-name-pattern: ./logs/service-%i.log.zip # Pattern for rolled-over log file names (default ${LOG_FILE}.%d{yyyy-MM-dd}.%i.gz).
+      max-file-size: 1KB # The maximum size of log file before it’s archived.
+      total-size-cap: 100MB # The maximum amount of size log archives can take before being deleted.
+      max-history: 30 # The number of days to keep log archives (defaults to 7)
+
+### Application configuration
+#
+#
+application:
+  version-info:
+    name: gitops-evaluation-spring-boot-example
+    environment: ${ENVIRONMENT}
+    version: ${VERSION:unknown}
+

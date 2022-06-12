@@ -1,0 +1,9 @@
+environment: LOCAL
+application:
+  system: gitops
+  name: gitops-evaluation-spring-boot-example
+  version: 1.0.0-SNAPSHOT
+  port: 8083
+  deployment:
+    image: registry.app.corpintra.net/gitops-evaluation-spring-boot-example
+    tag: "<placeholder>"

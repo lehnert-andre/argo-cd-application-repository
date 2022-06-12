@@ -1,0 +1,45 @@
+name: Continous Integration
+
+on:
+  push:
+    branches: [ master, feature/** ]
+
+env:
+  DOCKER_USER: ${{secrets.DOCKER_USER}}
+  DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
+  DOCKER_REPO_NAME: ${{secrets.DOCKER_REPO_NAME}}
+  
+jobs:
+  push-image-to-docker-hub:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v2 
+    
+    - name: Get tag info
+      id: tagInfo
+      run: |
+        echo "::set-output name=date::$(date +'%Y-%m-%d')"
+        echo "::set-output name=shaShort::$(git rev-parse --short HEAD)"
+      
+    - uses: actions/setup-java@v2
+      with:
+        distribution: 'temurin' # See 'Supported distributions' for available options https://github.com/actions/setup-java
+        java-version: '17'
+        cache: 'maven'
+
+    - name: Build the Docker image 
+      run: |
+        echo "Build Docker image $DOCKER_USER/$DOCKER_REPO_NAME:latest"
+        cd application
+        sh ./mvnw spring-boot:build-image -Dspring-boot.build-image.imageName=$DOCKER_USER/$DOCKER_REPO_NAME
+      
+    - name: Docker Login
+      run: | 
+        docker login -u $DOCKER_USER -p $DOCKER_PASSWORD  
+      
+    - name: Docker Image Tagging and Push
+      run: |
+        docker tag $DOCKER_USER/$DOCKER_REPO_NAME:latest $DOCKER_USER/$DOCKER_REPO_NAME:${{ steps.tagInfo.outputs.date }}-${{ steps.tagInfo.outputs.shaShort }}
+        echo "Push image $DOCKER_USER/$DOCKER_REPO_NAME:${{ steps.tagInfo.outputs.date }}-${{ steps.tagInfo.outputs.shaShort }}"
+        docker push $DOCKER_USER/$DOCKER_REPO_NAME:${{ steps.tagInfo.outputs.date }}-${{ steps.tagInfo.outputs.shaShort }}

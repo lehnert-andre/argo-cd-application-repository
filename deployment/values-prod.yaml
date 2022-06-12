@@ -1,0 +1,9 @@
+env: PROD
+application:
+  replicas: 1
+
+# resource management
+cpuRequest: 0.05
+cpuLimit: 0.5
+memoryRequest: 300Mi
+memoryLimit: 600Mi

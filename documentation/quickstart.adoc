@@ -1,0 +1,48 @@
+=== Quick Start
+
+Open REST API specification: _http://localhost:8083/api/specification/index.html_
+
+[source,bash]
+----
+cd application
+----
+
+==== Start development server
+
+[source,bash]
+----
+sh ./mvnw spring-boot:run
+----
+
+==== Build Docker Image
+[source,bash]
+----
+sh ./mvnw spring-boot:build-image
+----
+
+Generated Docker Image name schema: `${project.artifactId}:${project.version}`
+
+Use `$ sh ./mvnw spring-boot:build-image -Dspring-boot.build-image.imageName=my-organization/my-repository-name`
+to change the Image name.
+
+==== Run Docker Container
+[source,bash]
+----
+docker run -p 8083:8083 --env APPLICATION_VERSION=1.0.0 --env APPLICATION_ENVIRONMENT=LOCAL gitops-evaluation-spring-boot-example
+----
+
+_Available Environment Variables_
+[cols="4,4"]
+|=======================================================================
+|*Environment Variable*         |*Values*
+.2+|APPLICATION_ENVIRONMENT     |LOCAL (default)
+|PROD
+|APPLICATION_VERSION            |<String, default: "unknown">
+|=======================================================================
+
+
+==== Run Docker Container with predefined environment file
+[source,bash]
+----
+docker run -p 8083:8083 --env-file ../deployment/environment-variables/local.properties alehnert/gitops-evaluation-spring-boot-example
+----
