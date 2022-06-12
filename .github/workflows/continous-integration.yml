@@ -11,23 +11,63 @@ env:
   ACCESS_TOKEN: ${{secrets.PERSONAL_ACCESS_TOKEN}}
   
 jobs:
-  
+  push-image-to-docker-hub:
+    runs-on: ubuntu-latest
+    outputs:
+      date: ${{ steps.tagInfo.outputs.date }}
+      shaShort: ${{ steps.tagInfo.outputs.shaShort }}
+    
+    steps:
+    - uses: actions/checkout@v2 
+    
+    - name: Get tag info
+      id: tagInfo
+      run: |
+        echo "::set-output name=date::$(date +'%Y-%m-%d')"
+        echo "::set-output name=shaShort::$(git rev-parse --short HEAD)"
+      
+    - uses: actions/setup-java@v2
+      with:
+        distribution: 'temurin' # See 'Supported distributions' for available options https://github.com/actions/setup-java
+        java-version: '17'
+        cache: 'maven'
+
+    - name: Build the Docker image 
+      run: |
+        echo "Build Docker image $DOCKER_USER/$DOCKER_REPO_NAME:latest"
+        cd application
+        sh ./mvnw spring-boot:build-image -Dspring-boot.build-image.imageName=$DOCKER_USER/$DOCKER_REPO_NAME
+      
+    - name: Docker Login
+      run: | 
+        docker login -u $DOCKER_USER -p $DOCKER_PASSWORD  
+      
+    - name: Docker Image Tagging and Push
+      run: |
+        docker tag $DOCKER_USER/$DOCKER_REPO_NAME:latest $DOCKER_USER/$DOCKER_REPO_NAME:${{ steps.tagInfo.outputs.date }}-${{ steps.tagInfo.outputs.shaShort }}
+        echo "Push image $DOCKER_USER/$DOCKER_REPO_NAME:${{ steps.tagInfo.outputs.date }}-${{ steps.tagInfo.outputs.shaShort }}"
+        docker push $DOCKER_USER/$DOCKER_REPO_NAME:${{ steps.tagInfo.outputs.date }}-${{ steps.tagInfo.outputs.shaShort }}
+
+
   update-gitops-repo:
     runs-on: ubuntu-latest
-      
+    needs: push-image-to-docker-hub
+
     steps:
     - uses: imranismail/setup-kustomize@v1
     - run: |
+        export tag=${{ needs.push-image-to-docker-hub.outputs.date }}-${{ needs.push-image-to-docker-hub.outputs.shaShort }}
+        echo tag
         git clone https://${ACCESS_TOKEN}@github.com/lehnert-andre/argo-cd-gitops-repository.git
         ls
         cd argo-cd-gitops-repository/kustomize/app/env/dev
         pwd
-        kustomize edit set image alehnert/argo-cd-application-repository=alehnert/argo-cd-application-repositor:${GITHUB_SHA}
+        kustomize edit set image alehnert/argo-cd-application-repository=alehnert/argo-cd-application-repository:${tag}
         cat kustomization.yaml
         git config --global user.email "ci@example.com"
         git config --global user.name "CI pipeline"
         git add .
-        git commit -m "Set `alehnert/argo-cd-application-repository` image tag to `${GITHUB_SHA}`"
+        git commit -m "Set `alehnert/argo-cd-application-repository` image tag to `${tag}`"
         git push https://${ACCESS_TOKEN}@github.com/lehnert-andre/argo-cd-gitops-repository.git
 
   
