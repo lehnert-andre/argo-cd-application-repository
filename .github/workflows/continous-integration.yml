@@ -48,6 +48,15 @@ jobs:
         echo "Push image $DOCKER_USER/$DOCKER_REPO_NAME:${{ steps.tagInfo.outputs.date }}-${{ steps.tagInfo.outputs.shaShort }}"
         docker push $DOCKER_USER/$DOCKER_REPO_NAME:${{ steps.tagInfo.outputs.date }}-${{ steps.tagInfo.outputs.shaShort }}
 
+    - uses: actions/upload-artifact@master
+      with:
+        name: environment-file-dev
+        path: environment-variables/dev/dev.env
+
+    - uses: actions/upload-artifact@master
+      with:
+        name: environment-file-prod
+        path: environment-variables/prod/prod.env
 
   update-gitops-repo:
     runs-on: ubuntu-latest
@@ -57,13 +66,24 @@ jobs:
     - uses: imranismail/setup-kustomize@v1
     - run: |
         export tag=${{ needs.push-image-to-docker-hub.outputs.date }}-${{ needs.push-image-to-docker-hub.outputs.shaShort }}
-        echo tag
         git clone https://${ACCESS_TOKEN}@github.com/lehnert-andre/argo-cd-gitops-repository.git
-        ls
         cd argo-cd-gitops-repository/kustomize/app/env/dev
-        pwd
         kustomize edit set image alehnert/argo-cd-application-repository=alehnert/argo-cd-application-repository:${tag}
         cat kustomization.yaml
+
+    - uses: actions/download-artifact@master
+      with:
+        name: environment-file-dev
+        path: argo-cd-gitops-repository/kustomize/app/env/dev
+
+    - uses: actions/download-artifact@master
+      with:
+        name: environment-file-prod
+        path: argo-cd-gitops-repository/kustomize/app/env/prod
+    
+    - run: |
+        pwd
+        ls
         git config --global user.email "ci@example.com"
         git config --global user.name "CI pipeline"
         git add .
