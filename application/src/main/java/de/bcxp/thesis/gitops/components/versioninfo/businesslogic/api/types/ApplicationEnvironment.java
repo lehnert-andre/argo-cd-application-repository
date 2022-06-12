@@ -8,6 +8,8 @@ import de.bcxp.thesis.gitops.components.versioninfo.businesslogic.api.errorcode.
  */
 public enum ApplicationEnvironment {
   LOCAL,
+  DEV,
+  STAGING,
   PROD,
   ;
 
