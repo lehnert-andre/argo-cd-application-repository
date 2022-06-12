@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
-@Tag(name = "1) Version Information")
+@Tag(name = "1) Information")
 @RestController
 @RequestMapping("/v1/version")
 public class VersionInfoResourceV1 {
