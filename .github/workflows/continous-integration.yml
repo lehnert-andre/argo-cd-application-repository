@@ -68,15 +68,24 @@ jobs:
         echo Update DEV
         cp ${projectRoot}/environment-variables/dev.env ${projectRoot}/argo-cd-gitops-repository/kustomize/app/env/dev/dev.env
         
-        echo Update Docker Image tag
+        echo Update Docker Image tag on DEV
         cd ${projectRoot}/argo-cd-gitops-repository/kustomize/app/env/dev
-        ls
         kustomize edit set image alehnert/argo-cd-application-repository=alehnert/argo-cd-application-repository:${tag}
         
         echo Push DEV changes
         git add .
-        git commit -m "Release `${tag}`"
+        git commit -m "Deploy ${tag} on DEV"
         git push https://${ACCESS_TOKEN}@github.com/lehnert-andre/argo-cd-gitops-repository.git
 
+        echo Update PROD
+        git checkout -b release/${tag}
+        cp ${projectRoot}/environment-variables/prod.env ${projectRoot}/argo-cd-gitops-repository/kustomize/app/env/prod/prod.env
+        
+        echo Update Docker Image tag on PROD
+        cd ${projectRoot}/argo-cd-gitops-repository/kustomize/app/env/prod
+        kustomize edit set image alehnert/argo-cd-application-repository=alehnert/argo-cd-application-repository:${tag}
+        git add .
+        git commit -m "Release ${tag}"
+        git push https://${ACCESS_TOKEN}@github.com/lehnert-andre/argo-cd-gitops-repository.git release/${tag}
 
   
