@@ -16,13 +16,10 @@ jobs:
     runs-on: ubuntu-latest
       
     steps:
-    - uses: actions/checkout@v2 
-      with:
-        repository: lehnert-andre/argo-cd-gitops-repository
-        path: './argo-cd-gitops-repository'
-
     - uses: imranismail/setup-kustomize@v1
     - run: |
+        git clone https://${ACCESS_TOKEN}@github.com/lehnert-andre/argo-cd-gitops-repository.git
+        ls
         cd argo-cd-gitops-repository/kustomize/app/env/dev
         pwd
         kustomize edit set image alehnert/argo-cd-application-repository=alehnert/argo-cd-application-repositor:${GITHUB_SHA}
