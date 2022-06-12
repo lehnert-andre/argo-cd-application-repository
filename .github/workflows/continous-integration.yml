@@ -89,6 +89,7 @@ jobs:
         git push https://${ACCESS_TOKEN}@github.com/lehnert-andre/argo-cd-gitops-repository.git release/${tag}
 
         echo Create Pull Request
+        gh auth login --with-token ${ACCESS_TOKEN}
         gh pr create --fill --base main
         
       
