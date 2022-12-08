@@ -44,5 +44,5 @@ _Available Environment Variables_
 ==== Run Docker Container with predefined environment file
 [source,bash]
 ----
-docker run -p 8083:8083 --env-file ../deployment/environment-variables/local.properties alehnert/gitops-evaluation-spring-boot-example
+docker run -p 8083:8083 --env-file ../deployment/environment-variables/dev/dev.env alehnert/gitops-evaluation-spring-boot-example
 ----
