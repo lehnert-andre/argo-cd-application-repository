@@ -35,14 +35,16 @@ _Available Environment Variables_
 [cols="4,4"]
 |=======================================================================
 |*Environment Variable*         |*Values*
-.2+|APPLICATION_ENVIRONMENT     |LOCAL (default)
+.3+|APPLICATION_ENVIRONMENT     |LOCAL (default)
+|DEV
 |PROD
 |APPLICATION_VERSION            |<String, default: "unknown">
+|EXAMPLE                        |<String, default: "unknown">
 |=======================================================================
 
 
 ==== Run Docker Container with predefined environment file
 [source,bash]
 ----
-docker run -p 8083:8083 --env-file ../deployment/environment-variables/dev/dev.env alehnert/gitops-evaluation-spring-boot-example
+docker run -p 8083:8083 --env-file ../deployment/environment-variables/dev/dev.env alehnert/argo-cd-application-repository
 ----

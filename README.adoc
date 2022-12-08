@@ -12,9 +12,9 @@ _http://localhost:8083/api/v1/version_
 {
   "name":"gitops-evaluation-spring-boot-example",
   "environment":"PROD",
-  "version":"1.0.0"
+  "version":"1.0.0",
+  "example": "kubernetes|kustomize|helm|unknown"
 }
 ----
 
 include::./documentation/quickstart.adoc[]
-include::./documentation/setup.adoc[]
