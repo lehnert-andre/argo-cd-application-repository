@@ -20,8 +20,8 @@ public class OpenApiSpecificationConfiguration {
   public OpenAPI customOpenAPI() {
     return new OpenAPI()
         .tags(List.of(
-            new Tag().name("1) Version Information"),
-            new Tag().name("Utility")
+            new Tag().name("1) Information"),
+            new Tag().name("2) Utility")
         ))
         .info(new Info()
             .title("GitOps Evaluation - Spring Boot Microservice Example")
@@ -33,6 +33,8 @@ public class OpenApiSpecificationConfiguration {
                          
                          * `GET /api/v1/version`
                            Application version information based on environment variables, which are set differently depending on the environment.
+                         * `GET /api/v1/ping`
+                           Simple health check endpoint with a positive response (200) or not.
                            
                          
                          ## Usage
