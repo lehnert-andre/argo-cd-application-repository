@@ -68,7 +68,7 @@
 				<configuration>
 					<excludeDevtools>true</excludeDevtools>
 					<environmentVariables>
-						<APPLICATION_VERSION>${project.version}</APPLICATION_VERSION>
+						<VERSION>${project.version}</VERSION>
 					</environmentVariables>
 					<layers>
 						<enabled>true</enabled>

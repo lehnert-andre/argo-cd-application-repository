@@ -8,4 +8,5 @@ public interface VersionInfoConfiguration {
   String getName();
   String getEnvironment();
   String getVersion();
+  String getExample();
 }

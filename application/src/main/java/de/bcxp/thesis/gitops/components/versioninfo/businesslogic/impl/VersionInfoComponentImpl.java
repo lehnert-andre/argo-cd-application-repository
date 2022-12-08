@@ -31,15 +31,16 @@ public class VersionInfoComponentImpl implements VersionInfoComponent {
     final String version = versionInfoConfiguration.getVersion();
     final ApplicationEnvironment applicationEnvironment = ApplicationEnvironment.fromString(
         versionInfoConfiguration.getEnvironment());
+    final String example = versionInfoConfiguration.getExample();
 
     Precondition.checkNotNullOrEmpty(name, "VersionInfo name must not be null or empty");
     Precondition.checkNotNullOrEmpty(version, "VersionInfo version must not be null or empty");
     Precondition.checkNotNull(applicationEnvironment, "VersionInfo applicationEnvironment must not be null");
 
-    LOG.info("Read version info from config with name={}, environment={} and version={}",
-        name, applicationEnvironment, version);
+    LOG.info("Read version info from config with name={}, environment={}, version={} and example={}",
+        name, applicationEnvironment, version, example);
 
-    return new VersionInfo(name, applicationEnvironment, version);
+    return new VersionInfo(name, applicationEnvironment, version, example);
   }
 
 }

@@ -83,9 +83,9 @@ public class VersionInfoResourceV1 {
   public VersionInfoTO getVersionInfo() {
     final VersionInfo versionInfo = versionInfoComponent.getVersionInfo();
 
-    LOG.info("Map version info with name={}, environment={} and version={}",
-        versionInfo.name(), versionInfo.applicationEnvironment().name(), versionInfo.version());
+    LOG.info("Map version info with name={}, environment={}, version={} and example={}",
+        versionInfo.name(), versionInfo.applicationEnvironment().name(), versionInfo.version(), versionInfo.example());
 
-    return new VersionInfoTO(versionInfo.name(), versionInfo.applicationEnvironment().name(), versionInfo.version());
+    return new VersionInfoTO(versionInfo.name(), versionInfo.applicationEnvironment().name(), versionInfo.version(), versionInfo.example());
   }
 }

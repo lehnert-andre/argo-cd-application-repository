@@ -14,11 +14,13 @@ public class VersionInfoConfigurationImpl implements VersionInfoConfiguration {
   private final String name;
   private final String environment;
   private final String version;
+  private final String example;
 
-  public VersionInfoConfigurationImpl(String name, String environment, String version) {
+  public VersionInfoConfigurationImpl(String name, String environment, String version, String example) {
     this.name = name;
     this.environment = environment;
     this.version = version;
+    this.example = example;
   }
 
   @Override
@@ -34,5 +36,10 @@ public class VersionInfoConfigurationImpl implements VersionInfoConfiguration {
   @Override
   public String getVersion() {
     return version;
+  }
+
+  @Override
+  public String getExample() {
+    return example;
   }
 }

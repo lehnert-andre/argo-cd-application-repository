@@ -64,4 +64,5 @@ application:
     name: gitops-evaluation-spring-boot-example
     environment: ${ENVIRONMENT}
     version: ${VERSION:unknown}
+    example: ${EXAMPLE:unknown}
 

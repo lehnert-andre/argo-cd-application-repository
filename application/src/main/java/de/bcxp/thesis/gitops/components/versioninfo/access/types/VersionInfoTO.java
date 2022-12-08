@@ -5,6 +5,6 @@ import de.bcxp.thesis.common.marker.TransferObject;
 /**
  * @author Andre Lehnert, BettercallPaul gmbh
  */
-public record VersionInfoTO (String name, String environment, String version) implements TransferObject {
+public record VersionInfoTO (String name, String environment, String version, String example) implements TransferObject {
 
 }
